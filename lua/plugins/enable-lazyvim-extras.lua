@@ -10,4 +10,10 @@ return {
   { import = "lazyvim.plugins.extras.formatting.prettier" },
   -- Linting
   { import = "lazyvim.plugins.extras.linting.eslint" },
+
+  -- Coding
+  { import = "lazyvim.plugins.extras.coding.mini-surround" },
+
+  -- Editor
+  { import = "lazyvim.plugins.extras.editor.harpoon2" },
 }

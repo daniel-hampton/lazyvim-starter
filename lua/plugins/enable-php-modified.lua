@@ -19,6 +19,7 @@ return {
         phpactor = {
           enabled = lsp == "phpactor",
         },
+        -- You need to put the Intelephense license key in `$HOME/intelephense/licence.txt` (Note the spelling `licence.txt` 🙄 )
         intelephense = {
           enabled = lsp == "intelephense",
         },
