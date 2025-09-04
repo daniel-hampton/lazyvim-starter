@@ -28,6 +28,7 @@ return {
         return {}
       end
 
+      -- Chaning the color for Comments
       opts.custom_highlights = function(colors)
         local hl = prev(colors) or {}
         hl.Comment = { fg = colors.teal }
