@@ -5,6 +5,7 @@ return {
   { import = "lazyvim.plugins.extras.lang.typescript" },
   { import = "lazyvim.plugins.extras.lang.vue" },
   { import = "lazyvim.plugins.extras.lang.astro" },
+  { import = "lazyvim.plugins.extras.lang.clangd" }, -- C, C++
 
   -- Formatting
   { import = "lazyvim.plugins.extras.formatting.prettier" },
