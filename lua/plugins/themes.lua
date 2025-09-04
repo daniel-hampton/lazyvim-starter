@@ -3,14 +3,6 @@ return {
   -- add gruvbox
   { "ellisonleao/gruvbox.nvim" },
 
-  -- add darcula
-  {
-    "xiantang/darcula-dark.nvim",
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-    },
-  },
-
   -- Fix for catppuccin integration
   -- [GitHub Issue](https://github.com/LazyVim/LazyVim/issues/6355#issuecomment-3212986215)
   {
@@ -43,7 +35,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "catppuccin",
+      colorscheme = "gruvbox",
     },
   },
 }
