@@ -11,11 +11,10 @@ return {
     lazy = false,
     keys = {
       {
-        "<leader>o",
+        "-",
         function()
           local oil = require("oil")
-          oil.discard_all_changes()
-          oil.toggle_float()
+          oil.open()
         end,
         desc = "Open oil file browser",
       },
