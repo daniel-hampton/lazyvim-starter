@@ -1,7 +1,34 @@
 -- Just enables gruvbox theme.
 return {
   -- add gruvbox
-  { "ellisonleao/gruvbox.nvim" },
+  {
+    "ellisonleao/gruvbox.nvim",
+    ---@module 'gruvbox'
+    ---@type GruvboxConfig
+    opts = {
+      italic = {
+        strings = false,
+        emphasis = true,
+        comments = true,
+        operators = false,
+        folds = true,
+      },
+      contrast = "hard",
+      -- transparent_mode = true,
+      overrides = {
+        -- ["@comment"] = { fg = "#387258" },
+        -- ["@string"] = { fg = "#6A8759" },
+        -- ["@string"] = { fg = "#b8bb26" },
+      },
+      palette_overrides = {
+        -- bright_green = "#6aaa59",
+        -- bright_yellow = "#6aaa59",
+        -- bright_green = "#6aaa59",
+        -- bright_green = "#fabd2f",
+        -- bright_yellow = "#b8bb26",
+      },
+    },
+  },
 
   -- Fix for catppuccin integration
   -- [GitHub Issue](https://github.com/LazyVim/LazyVim/issues/6355#issuecomment-3212986215)
@@ -20,7 +47,7 @@ return {
         return {}
       end
 
-      -- Chaning the color for Comments
+      -- Changing the color for Comments
       opts.custom_highlights = function(colors)
         local hl = prev(colors) or {}
         hl.Comment = { fg = colors.teal }
