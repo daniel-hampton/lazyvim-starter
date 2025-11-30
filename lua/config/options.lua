@@ -7,3 +7,5 @@ vim.g.snacks_animate = false
 
 -- Disable check order because I load lazyvim.plugins.extras in plugins/*.lua files.
 vim.g.lazyvim_check_order = false
+
+vim.opt.colorcolumn = "80,120"
