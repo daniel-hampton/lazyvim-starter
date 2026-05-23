@@ -1,5 +1,8 @@
--- Just enables gruvbox theme.
 return {
+  -- add kanagawa
+  {
+    "rebelot/kanagawa.nvim",
+  },
   -- add gruvbox
   {
     "ellisonleao/gruvbox.nvim",
@@ -62,7 +65,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "catppuccin",
+      colorscheme = "kanagawa-dragon",
     },
   },
 }
