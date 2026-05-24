@@ -2,7 +2,7 @@ return {
   -- I'm not certain this are necessary as it was the <A-j> and <A-k>
   -- that were causing the problem when using tmux.
   {
-    "echasnovski/mini.move",
+    "nvim-mini/mini.move",
     opts = {
       mappings = {
         -- Move selection in visual mode
