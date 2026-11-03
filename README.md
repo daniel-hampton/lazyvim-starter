@@ -50,9 +50,16 @@ Markdown message for an LLM. This is separate from `<leader>yr` and normal yanks
 1. Select code in Visual mode and press **`<leader>ya`**. Characterwise, linewise,
    and blockwise selections are captured exactly. In Normal mode, the same mapping
    captures the current line.
-2. Write a multiline comment in the floating editor. **Ctrl-S** saves the comment
-   and closes the editor. **Esc in Normal mode** or **Ctrl-C** cancels it. Empty
-   comments cannot be saved. Esc in Insert mode just returns to Normal mode.
+2. Write a multiline comment in the floating editor. It opens in **Normal mode**
+   and supports standard Vim motions and editing: use **`i`**, **`a`**, or **`o`**
+   to enter Insert mode, and **Esc** to return to Normal mode without closing it.
+   Use **`:w`** to save into the collection and keep editing, or **`:wq`** to save
+   and close. **`:q`** closes if there are no unsaved edits; **`:q!`** discards
+   unsaved edits. **Ctrl-S** saves and closes; **Ctrl-C** discards unsaved edits
+   and closes (both shortcuts work in Normal and Insert modes). Saving never
+   writes a file. After `:w`, canceling discards only subsequent edits, not the
+   already-saved comment. Empty comments cannot be saved; a failed `:wq` leaves
+   the editor open.
 3. Repeat in the same file or other files in the project. A **◆ gutter marker**
    appears at the beginning of each annotated selection.
 4. Press **`<leader>yl`** to review the collection. Use **Enter** to jump to the

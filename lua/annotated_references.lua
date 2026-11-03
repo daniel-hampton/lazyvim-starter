@@ -123,12 +123,15 @@ end
 
 local function comment_editor(session, snapshot, editing)
   local buf = vim.api.nvim_create_buf(false, true)
-  vim.bo[buf].buftype = "nofile"
+  vim.api.nvim_buf_set_name(buf, "references://comment/" .. buf)
+  vim.bo[buf].buftype = "acwrite"
   vim.bo[buf].bufhidden = "wipe"
   vim.bo[buf].swapfile = false
   vim.b[buf].references_root = session.root
   vim.bo[buf].filetype = "markdown"
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(editing and snapshot.comment or "", "\n", { plain = true }))
+  vim.bo[buf].modified = false
+  local saved = editing
   local width = math.max(1, math.min(90, vim.o.columns - 4))
   local height = math.max(1, math.min(12, vim.o.lines - 4))
   local win = vim.api.nvim_open_win(buf, true, {
@@ -141,7 +144,7 @@ local function comment_editor(session, snapshot, editing)
     border = "rounded",
     title = " Comment: " .. reference.location(snapshot) .. " ",
     title_pos = "center",
-    footer = " Ctrl-S: save | Esc (normal): cancel ",
+    footer = " :w save | :wq save/close | :q! discard | Ctrl-S save/close ",
     footer_pos = "center",
   })
   vim.wo[win].wrap = true
@@ -156,32 +159,49 @@ local function comment_editor(session, snapshot, editing)
   local function save()
     local comment = table.concat(vim.api.nvim_buf_get_lines(buf, 0, -1, false), "\n")
     if not comment:match("%S") then
-      notify("Write a comment, or cancel with Esc in Normal mode", vim.log.levels.WARN)
-      return
+      return nil, "Write a comment, or cancel with Ctrl-C / :q!"
     end
-    if sessions[session.root] ~= session or (editing and not vim.tbl_contains(session.entries, snapshot)) then
-      notify("This reference or collection was removed; comment not saved", vim.log.levels.WARN)
-      cancel()
-      return
+    if sessions[session.root] ~= session or (saved and not vim.tbl_contains(session.entries, snapshot)) then
+      return nil, "This reference or collection was removed; comment not saved"
     end
     snapshot.comment = comment
-    if not editing then
+    local updating = saved
+    if not saved then
       snapshot.id = session.next_id
       session.next_id = session.next_id + 1
       session.entries[#session.entries + 1] = snapshot
+      saved = true
       if valid(snapshot.bufnr) then
         attach_marker(snapshot, snapshot.bufnr)
       end
     end
     changed(session)
-    cancel()
-    notify((editing and "Updated " or "Added ") .. reference.location(snapshot))
+    vim.bo[buf].modified = false
+    notify((updating and "Updated " or "Added ") .. reference.location(snapshot))
+    return true
   end
 
-  vim.keymap.set({ "n", "i" }, "<C-s>", save, { buffer = buf, desc = "Save reference comment" })
+  -- acwrite handles native :w/:wq without writing a file. Errors must abort :wq.
+  vim.api.nvim_create_autocmd("BufWriteCmd", {
+    buffer = buf,
+    callback = function()
+      local ok, err = save()
+      if not ok then
+        error(err, 0)
+      end
+    end,
+  })
+  vim.keymap.set({ "n", "i" }, "<C-s>", function()
+    local ok, err = save()
+    if ok then
+      cancel()
+    else
+      notify(err, vim.log.levels.WARN)
+    end
+  end, { buffer = buf, desc = "Save and close reference comment" })
   vim.keymap.set({ "n", "i" }, "<C-c>", cancel, { buffer = buf, desc = "Cancel reference comment" })
-  vim.keymap.set("n", "<Esc>", cancel, { buffer = buf, desc = "Cancel reference comment" })
-  vim.cmd.startinsert()
+  -- Keep standard Normal/Insert/Visual editing, including Esc, in this buffer.
+  vim.cmd.stopinsert()
 end
 
 local function add(snapshot, err)
